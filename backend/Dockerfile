@@ -1,7 +1,7 @@
 # Utilise une image PHP avec extensions nécessaires
 FROM php:8.2-fpm
 
-# Installe les dépendances système (curl, git, zip, unzip, libzip, etc)
+# Installe les dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 # Installe Composer globalement
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copie tout le code dans le conteneur
+# Copie le code source dans le conteneur
 COPY . /var/www/html
 
 # Copie le .env.example vers .env (IMPORTANT)
@@ -27,14 +27,12 @@ COPY .env.example /var/www/html/.env
 
 WORKDIR /var/www/html
 
-# Installe les dépendances PHP (sans dev pour prod)
+# Installe les dépendances PHP (sans dev)
 RUN composer install --no-dev --optimize-autoloader
 
-# Génère la clé Laravel
-RUN php artisan key:generate
-
-# Applique les migrations (base de données)
-RUN php artisan migrate --force
+# Copie le script de démarrage dans le conteneur
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 # Donne les droits nécessaires
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
@@ -42,5 +40,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Expose le port 9000 (PHP-FPM)
 EXPOSE 9000
 
-# Commande par défaut pour lancer PHP-FPM
-CMD ["php-fpm"]
+# Utilise le script start.sh comme commande par défaut
+CMD ["/start.sh"]
+
