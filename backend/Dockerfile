@@ -22,12 +22,15 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copie tout le code dans le conteneur
 COPY . /var/www/html
 
+# Copie le .env.example vers .env (IMPORTANT)
+COPY .env.example /var/www/html/.env
+
 WORKDIR /var/www/html
 
 # Installe les dépendances PHP (sans dev pour prod)
 RUN composer install --no-dev --optimize-autoloader
 
-# Génère la clé Laravel (optionnel si déjà générée)
+# Génère la clé Laravel
 RUN php artisan key:generate
 
 # Applique les migrations (base de données)
