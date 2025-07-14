@@ -1,3 +1,38 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 1.8rem;
+  background: #007bff; /* bleu */
+  padding: 1rem 0;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar a:hover,
+.navbar a:focus {
+  background-color: #0056b3; /* bleu plus foncé */
+  color: #e0eafc;
+  outline: none;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
 .App {
   text-align: center;
 }

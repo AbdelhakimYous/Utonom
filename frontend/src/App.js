@@ -1,8 +1,12 @@
 import './App.css';
 import Form from './form.js';
 import Login from './login.js';
+import AjouterVoiture from './ajouterVoiture.js';
+import localiser from './localiser.js';
+import LesVoitures from './lesVoitures.js'; // Assurez-vous que ce fichier existe
 // Importe d'autres pages ici
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import Localiser from './localiser.js';
 
 function Home() {
   return (
@@ -50,21 +54,30 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <nav>
-          <Link to="/">Accueil</Link> |{' '}
-          <Link to="/form">Formulaire</Link> |{' '}
-          <Link to="/about">À propos</Link> |{' '}
-          <Link to="/login">Connexion</Link>
-        </nav>
+<nav className="navbar">
+  <Link to="/">Accueil</Link>
+  <Link to="/form">Formulaire</Link>
+  <Link to="/about">À propos</Link>
+  <Link to="/login">Connexion</Link>
+  <Link to="/lesvoitures">Liste des Voitures</Link>
+  <Link to="/ajoutervoiture">Ajouter Voiture</Link>
+  <Link to="/localiser">Chercher une voiture</Link>
+</nav>
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/form" element={<Form />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/ajoutervoiture" element={<AjouterVoiture />} />
+          <Route path="/lesvoitures" element={<LesVoitures />} /> 
+          <Route path="/localiser" element={<Localiser/>} /> 
           {/* Ajoute ici d'autres routes/pages */}
         </Routes>
       </Router>
     </div>
+
+    
   );
 }
 

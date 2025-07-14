@@ -8,7 +8,9 @@ function Login() {
 
     async function handleSubmit(e) {
     e.preventDefault();
-    const url = process.env.REACT_APP_API_URL + '/connexion';
+    const url2 = process.env.REACT_APP_API_URL + '/connexion';
+    const url = 'http://127.0.0.1:8000/api/connexion';
+
 
     const response = await fetch(url, {
     method: "POST",

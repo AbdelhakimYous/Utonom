@@ -1,66 +1,44 @@
-.form-bg {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
-}
-
-.form-container {
-  background: #fff;
-  padding: 2rem 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+/* form.css */
+form {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #f0f8ff; /* bleu très clair */
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
   display: flex;
   flex-direction: column;
-  min-width: 340px;
+  gap: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.form-container h2 {
-  color: #2d3a4b;
-  margin-bottom: 1.5rem;
-  text-align: center;
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+  padding: 12px;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: box-shadow 0.2s ease;
 }
 
-.form-container input {
-  margin-bottom: 1rem;
-  padding: 0.8rem;
-  border-radius: 8px;
-  border: 1px solid #cfd8dc;
-  font-size: 1rem;
-  transition: border 0.2s;
-}
-
-.form-container input:focus {
-  border: 1.5px solid #007bff;
+input:focus {
   outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-.form-container button {
-  background: #007bff;
-  color: #fff;
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
   border: none;
-  border-radius: 8px;
-  padding: 1rem;
-  font-size: 1.1rem;
+  border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,123,255,0.15);
-  margin-bottom: 1rem;
-  transition: background 0.2s;
+  transition: background-color 0.3s ease;
 }
 
-.form-container button:hover {
-  background: #0056b3;
-}
-
-.form-error {
-  color: #d32f2f;
-  margin-bottom: 0.5rem;
-  text-align: center;
-}
-
-.form-success {
-  color: #388e3c;
-  margin-bottom: 0.5rem;
-  text-align: center;
+button[type="submit"]:hover {
+  background-color: #0056b3;
 }
