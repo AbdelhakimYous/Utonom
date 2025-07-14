@@ -502,7 +502,7 @@ function Localiser() {
               style={{ border: 0, borderRadius: "14px", boxShadow: "0 2px 12px #b0c4de44" }}
               loading="lazy"
               allowFullScreen
-              src={`https://www.google.com/maps/embed/v1/directions?key=AIzaSyAz0c-u2Y9kihbAsdpV6Qi3mu8BOQuuUGw&origin=${coords.latitude},${coords.longitude}&destination=${encodeURIComponent(destination)}`}
+              src={`https://www.google.com/maps/embed/v1/directions?key=${key}=${coords.latitude},${coords.longitude}&destination=${encodeURIComponent(destination)}`}
             />
           </div>
         )}
