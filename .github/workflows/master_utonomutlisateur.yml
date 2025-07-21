@@ -1,57 +1,106 @@
 name: Deploy Laravel backend to Azure Web App
-
 on:
   push:
     branches:
       - master
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
+        
       - name: Setup PHP 8.2
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-
+          extensions: mbstring, xml, ctype, json, bcmath, pdo, mysql
+          
+      - name: Copy .env file
+        working-directory: ./backend
+        run: cp .env.example .env
+        
       - name: Install Composer dependencies
         working-directory: ./backend
-        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader
-
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-dev
+        
       - name: Generate Laravel APP Key
         working-directory: ./backend
         run: php artisan key:generate --force
-
+        
       - name: Clear and cache config
         working-directory: ./backend
         run: |
           php artisan config:clear
           php artisan config:cache
-
-      - name: Zip backend folder content
+          php artisan route:cache
+          php artisan view:cache
+          
+      - name: Create web.config for Azure
         working-directory: ./backend
-        run: zip -r ../backend.zip .
-
+        run: |
+          cat > web.config << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <system.webServer>
+              <rewrite>
+                <rules>
+                  <rule name="Imported Rule 1" stopProcessing="true">
+                    <match url="^(.*)/$" ignoreCase="false" />
+                    <conditions>
+                      <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+                    </conditions>
+                    <action type="Redirect" redirectType="Permanent" url="/{R:1}" />
+                  </rule>
+                  <rule name="Imported Rule 2" stopProcessing="true">
+                    <match url="^" ignoreCase="false" />
+                    <conditions>
+                      <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
+                      <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+                    </conditions>
+                    <action type="Rewrite" url="index.php" />
+                  </rule>
+                </rules>
+              </rewrite>
+              <defaultDocument>
+                <files>
+                  <clear />
+                  <add value="index.php" />
+                  <add value="default.aspx" />
+                  <add value="Default.htm" />
+                  <add value="Default.html" />
+                  <add value="default.htm" />
+                  <add value="index.html" />
+                  <add value="iisstart.htm" />
+                </files>
+              </defaultDocument>
+            </system.webServer>
+          </configuration>
+          EOF
+          
+      - name: Set correct permissions
+        working-directory: ./backend
+        run: |
+          chmod -R 775 storage
+          chmod -R 775 bootstrap/cache
+          
+      - name: Zip backend folder content (from root)
+        working-directory: ./backend
+        run: zip -r ../backend.zip . -x "*.git*" "node_modules/*" "tests/*" ".env.example"
+        
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
-
+          
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'utonomutilisateur'  # Nom exact de l'app Azure
+          app-name: 'utonomutilisateur'
           slot-name: 'Production'
           package: './backend.zip'
-
-      - name: Run Laravel migrations
-        working-directory: ./backend
-        run: php artisan migrate --force
-
+          
+      # Note: Les migrations doivent être exécutées après le déploiement via Azure CLI ou manuellement
 
