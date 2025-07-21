@@ -21,12 +21,12 @@ jobs:
           php-version: '8.2' # Remplace par ta version exacte si nécessaire
 
       - name: Install composer dependencies
-        working-directory: ./utonom/backend
+        working-directory: ./backend
         run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
       - name: Zip artifact for deployment
         run: |
-          cd ./utonom/backend
+          cd ./backend
           zip -r ../../release.zip .
 
       - name: Upload artifact for deployment job
