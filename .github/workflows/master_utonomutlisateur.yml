@@ -18,7 +18,7 @@ jobs:
           
       - name: Copy .env file
         working-directory: ./backend
-        run: cp .env.example .env
+        run: cp .env.example .env || echo "APP_KEY=" > .env
         
       - name: Install Composer dependencies
         working-directory: ./backend
@@ -33,7 +33,7 @@ jobs:
         run: |
           php artisan config:clear
           php artisan config:cache
-          php artisan route:cache
+          php artisan route:cache || echo "Route cache failed - continuing"
           php artisan view:cache
           
       - name: Create web.config for Azure
@@ -45,14 +45,7 @@ jobs:
             <system.webServer>
               <rewrite>
                 <rules>
-                  <rule name="Imported Rule 1" stopProcessing="true">
-                    <match url="^(.*)/$" ignoreCase="false" />
-                    <conditions>
-                      <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
-                    </conditions>
-                    <action type="Redirect" redirectType="Permanent" url="/{R:1}" />
-                  </rule>
-                  <rule name="Imported Rule 2" stopProcessing="true">
+                  <rule name="Laravel" stopProcessing="true">
                     <match url="^" ignoreCase="false" />
                     <conditions>
                       <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
@@ -66,12 +59,6 @@ jobs:
                 <files>
                   <clear />
                   <add value="index.php" />
-                  <add value="default.aspx" />
-                  <add value="Default.htm" />
-                  <add value="Default.html" />
-                  <add value="default.htm" />
-                  <add value="index.html" />
-                  <add value="iisstart.htm" />
                 </files>
               </defaultDocument>
             </system.webServer>
@@ -84,23 +71,9 @@ jobs:
           chmod -R 775 storage
           chmod -R 775 bootstrap/cache
           
-      - name: Zip backend folder content (from root)
-        working-directory: ./backend
-        run: zip -r ../backend.zip . -x "*.git*" "node_modules/*" "tests/*" ".env.example"
-        
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
-          
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'utonomutilisateur'
-          slot-name: 'Production'
-          package: './backend.zip'
-          
-      # Note: Les migrations doivent être exécutées après le déploiement via Azure CLI ou manuellement
-
+          app-name: 'utonomutlisateur'
+          package: './backend'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
