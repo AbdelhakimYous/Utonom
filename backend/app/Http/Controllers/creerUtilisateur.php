@@ -21,7 +21,7 @@ class CreerUtilisateur extends Controller
                 'age' => 'required|integer|min:0',
             ]);
 
-            DB::table('utilisateur')->insert([
+            DB::table('utilisateurs')->insert([
                 'nom' => $request->input('nom'),
                 'prenom' => $request->input('prenom'),
                 'email' => $request->input('email'),

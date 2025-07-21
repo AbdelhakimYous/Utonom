@@ -12,7 +12,7 @@ function Form() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-const url = 'https://utonomutlisateur-bnd8e0bqdyd0hdha.canadacentral-01.azurewebsites.net/api/nouveauutilisateur';
+  const url = 'https://utonom-production-3854.up.railway.app/api/nouveauutilisateur';
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
