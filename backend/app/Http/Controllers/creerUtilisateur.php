@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class creerUtilisateur extends Controller
+class CreerUtilisateur extends Controller
 {
  
 
@@ -31,9 +31,8 @@ class creerUtilisateur extends Controller
                 'motdepasse' => bcrypt($request->input('motdepasse')),
                 'nomUtilisateur' => $request->input('nomUtilisateur'),
                 'age' => $request->input('age'),
-
+                'role' => 'client'
             ]);
-            $this->addRole();
 
             return response()->json(['message' => 'Utilisateur enregistré avec succès'], 201);
 
@@ -44,13 +43,7 @@ class creerUtilisateur extends Controller
             return response()->json(['error' => 'Erreur lors de la création de l\'utilisateur'], 500);
         }
     }
-    public function addRole()
-    {
-            DB::table('roleutilisateur')->insert([
-                'utiliId' => DB::getPdo()->lastInsertId(),
-                'roleId' => 2,
-            ]);
-    }
+
 
 
 }
