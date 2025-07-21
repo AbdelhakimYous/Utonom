@@ -1,4 +1,6 @@
-name: Build and deploy Laravel backend1 to Azure Web App - utonomutilisateur
+name: Build and deploy Laravel backend1 to Azure Web App - utonomutlisateur
+
+
 
 on:
   push:
@@ -62,6 +64,6 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'utonomutilisateur'
+          app-name: 'utonomutlisateur'
           slot-name: 'Production'
           package: .
