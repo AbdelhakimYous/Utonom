@@ -13,7 +13,7 @@ const ChatBot = () => {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const response = await fetch('http://localhost:8004/api/chatbot', {
+      const response = await fetch('https://utonom-production-fc4b.up.railway.app/api/chatbot', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
