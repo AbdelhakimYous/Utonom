@@ -1,79 +1,35 @@
-name: Deploy Laravel backend to Azure Web App
+name: Deploy backend only to Azure
+
 on:
   push:
     branches:
-      - master
+      - main  # ou master selon ton projet
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend  # <- important ! sous-dossier ciblé
+
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Setup PHP 8.2
+
+      - name: Set up PHP (si Laravel)
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, ctype, json, bcmath, pdo, mysql
-          
-      - name: Copy .env file
-        working-directory: ./backend
-        run: cp .env.example .env || echo "APP_KEY=" > .env
-        
-      - name: Install Composer dependencies
-        working-directory: ./backend
-        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-dev
-        
-      - name: Generate Laravel APP Key
-        working-directory: ./backend
-        run: php artisan key:generate --force
-        
-      - name: Clear and cache config
-        working-directory: ./backend
+
+      - name: Install dependencies
         run: |
-          php artisan config:clear
-          php artisan config:cache
-          php artisan route:cache || echo "Route cache failed - continuing"
-          php artisan view:cache
-          
-      - name: Create web.config for Azure
-        working-directory: ./backend
-        run: |
-          cat > web.config << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <configuration>
-            <system.webServer>
-              <rewrite>
-                <rules>
-                  <rule name="Laravel" stopProcessing="true">
-                    <match url="^" ignoreCase="false" />
-                    <conditions>
-                      <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
-                      <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
-                    </conditions>
-                    <action type="Rewrite" url="index.php" />
-                  </rule>
-                </rules>
-              </rewrite>
-              <defaultDocument>
-                <files>
-                  <clear />
-                  <add value="index.php" />
-                </files>
-              </defaultDocument>
-            </system.webServer>
-          </configuration>
-          EOF
-          
-      - name: Set correct permissions
-        working-directory: ./backend
-        run: |
-          chmod -R 775 storage
-          chmod -R 775 bootstrap/cache
-          
+          composer install --no-dev --optimize-autoloader
+
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'utonomutlisateur'
-          package: './backend'
+          app-name: NOM-DE-TON-APP
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .
+
