@@ -16,4 +16,13 @@ Route::post('/nouveauutilisateur', [CreerUtilisateur::class, 'createUser']);
 Route::post('/connexion', [ConnexionController::class, 'connexion']);
 
 
-Route::get('/testDb', [Dbtest::class, 'testDb'])->name('testDb');
+use Illuminate\Support\Facades\DB;
+
+Route::get('/testDb', function () {
+    try {
+        $test = DB::select('SELECT * FROM utilisateurs LIMIT 1');
+        return response()->json($test);
+    } catch (\Throwable $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
