@@ -1,9 +1,9 @@
-name: Deploy backend only to Azure
+name: Deploy Laravel backend to Azure
 
 on:
   push:
     branches:
-      - main  # ou master selon ton projet
+      - main  # change à "master" si c'est ta branche principale
 
 jobs:
   build-and-deploy:
@@ -11,13 +11,13 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./backend  # <- important ! sous-dossier ciblé
+        working-directory: ./backend  # <- ton dossier Laravel
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up PHP (si Laravel)
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -25,10 +25,12 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-dev --optimize-autoloader
+          php artisan config:cache
 
-      - name: Deploy to Azure Web App
+      - name: Upload backend to Azure
         uses: azure/webapps-deploy@v2
         with:
-          app-name: NOM-DE-TON-APP
+          app-name: utonomutlisateur
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
+
