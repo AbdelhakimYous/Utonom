@@ -7,7 +7,7 @@ function Login() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const url = 'https://utonom-production-3854.up.railway.app/api/connexion';
+    const url = 'http://127.0.0.1:8006/api/connexion';
 
         try {
             const response = await fetch(url, {
