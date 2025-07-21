@@ -2,11 +2,14 @@ import './App.css';
 import Form from './form.js';
 import Login from './login.js';
 import AjouterVoiture from './ajouterVoiture.js';
-import localiser from './localiser.js';
-import LesVoitures from './lesVoitures.js'; // Assurez-vous que ce fichier existe
-// Importe d'autres pages ici
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import LesVoitures from './lesVoitures.js';
+import { BrowserRouter as Router, Route, Link, Routes, useNavigate } from 'react-router-dom';
 import Localiser from './localiser.js';
+import Lesutilisateurs from './touslesutilisateurs.js';
+import AfficherVns from './afficherlesvns.js';
+import React from "react";
+import ChatBot from './ChatBot.js';
+
 
 function Home() {
   return (
@@ -51,19 +54,46 @@ function About() {
 }
 
 function App() {
+  const [refresh, setRefresh] = React.useState(false);
+  const role = localStorage.getItem("role");
+  const userId = localStorage.getItem("user_id");
+  const isConnected = !!role && !!userId;
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setRefresh(r => !r); // force le refresh du composant
+  };
+
   return (
     <div className="App">
       <Router>
-<nav className="navbar">
-  <Link to="/">Accueil</Link>
-  <Link to="/form">Formulaire</Link>
-  <Link to="/about">À propos</Link>
-  <Link to="/login">Connexion</Link>
-  <Link to="/lesvoitures">Liste des Voitures</Link>
-  <Link to="/ajoutervoiture">Ajouter Voiture</Link>
-  <Link to="/localiser">Chercher une voiture</Link>
-</nav>
-
+        <nav className="navbar">
+          <Link to="/">Accueil</Link>
+          <Link to="/form">Formulaire</Link>
+          <Link to="/about">À propos</Link>
+          {!isConnected && <Link to="/login">Connexion</Link>}
+          {isConnected && (
+            <>
+              <Link to="/localiser">Chercher une voiture</Link>
+              <Link to="/lesvoitures">Liste des Voitures</Link>
+              <Link to="/lesutilisateurs">les</Link>
+              <Link to="/lesvns">vns</Link>
+              {role === "admin" && <Link to="/ajoutervoiture">Ajouter Voiture</Link>}
+              <button onClick={handleLogout} style={{
+                marginLeft: "1rem",
+                background: "#dc3545",
+                color: "#fff",
+                border: "none",
+                borderRadius: "8px",
+                padding: "0.5rem 1.2rem",
+                fontSize: "1rem",
+                cursor: "pointer"
+              }}>
+                Déconnexion
+              </button>
+            </>
+          )}
+        </nav>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/form" element={<Form />} />
@@ -72,9 +102,14 @@ function App() {
           <Route path="/ajoutervoiture" element={<AjouterVoiture />} />
           <Route path="/lesvoitures" element={<LesVoitures />} /> 
           <Route path="/localiser" element={<Localiser/>} /> 
-          {/* Ajoute ici d'autres routes/pages */}
+          <Route path="/lesutilisateurs" element={<Lesutilisateurs/>} /> 
+          <Route path="/lesvns" element={<AfficherVns/>} /> 
         </Routes>
       </Router>
+
+      <div className="App">
+        <ChatBot />
+      </div>
     </div>
 
     

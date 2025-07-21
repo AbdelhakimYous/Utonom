@@ -1,0 +1,34 @@
+relation:
+etudiant 1-* <-> 1-* cours 
+etudiant 1-* <-> 1-* cours 
+etudiant 1-* <-> 1-* cours 
+
+
+etudiant 
+
+
+
+cours 
+
+
+plagehoraire 
+id
+heuredebut time
+heuredefin time
+heuredefin time
+
+
+inscription
+id
+etudiantId
+coursid
+plagehoraireid
+
+ajouteerEtudintaucour()
+
+
+
+
+
+
+

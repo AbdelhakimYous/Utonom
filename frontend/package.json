@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://AbdelhakimYous.github.io/Utonom",
   "dependencies": {
+    "@paypal/react-paypal-js": "^8.8.3",
     "@react-google-maps/api": "^2.20.7",
     "@react-oauth/google": "^0.12.2",
     "@testing-library/dom": "^10.4.0",

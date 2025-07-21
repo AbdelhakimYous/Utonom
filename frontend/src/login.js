@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import "./login.css";
 
 function Login() {
@@ -7,47 +6,62 @@ function Login() {
     const [motdepasse, setMotdepasse] = useState("");
 
     async function handleSubmit(e) {
-    e.preventDefault();
-    const url2 = process.env.REACT_APP_API_URL + '/connexion';
-    const url = 'http://127.0.0.1:8000/api/connexion';
+        e.preventDefault();
+        const url = 'http://127.0.0.1:8001/api/connexion';
 
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    motdepasse,
+                }),
+            });
 
-    const response = await fetch(url, {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-        email,
-        motdepasse,
-    }),
-});
+            if (!response.ok) {
+                const errorText = await response.text(); // lire le body UNE seule fois
+                console.error("Erreur côté serveur :", errorText);
+                return;
+            }
 
-let data;
-try {
-    data = await response.json();
-    console.log('voila le role');
-    console.log(data.roles);
-    localStorage.setItem("role", data.roles[0]);
-} catch (e) {
-    // Affiche la vraie réponse pour debug
-    const text = await response.text();
-    console.error("Réponse non JSON :", text);
-    return;
-}
-console.log(data);
+            const data = await response.json(); // lire le JSON ici si ok
+            console.log("Connexion réussie !");
+            console.log("Rôle :", data.roles);
+
+            localStorage.setItem("role", data.roles);
+            localStorage.setItem("user_id", data.id);
+            console.log(data.id);
+
+        } catch (error) {
+            console.error("Erreur réseau ou autre :", error);
+        }
     }
 
-  return (
-    <div>
-      <h2>Connexion</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Mot de passe" value={motdepasse} onChange={e => setMotdepasse(e.target.value)} required />
-        <button type="submit">Se connecter</button>
-      </form>
-    </div>
-  );
+    return (
+        <div>
+            <h2>Connexion</h2>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Mot de passe"
+                    value={motdepasse}
+                    onChange={e => setMotdepasse(e.target.value)}
+                    required
+                />
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+    );
 }
 
 export default Login;
