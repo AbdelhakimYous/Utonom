@@ -26,3 +26,5 @@ Route::get('/testDb', function () {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
+
+Route::get('/ping', [CreerUtilisateur::class, 'ping']);

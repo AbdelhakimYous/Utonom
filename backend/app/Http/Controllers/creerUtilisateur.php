@@ -42,5 +42,9 @@ class CreerUtilisateur extends Controller
     }
 
 
+public function ping()
+{
+    return response()->json(['message' => 'pong']);
+}
 
 }
