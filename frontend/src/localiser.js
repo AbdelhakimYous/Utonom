@@ -112,7 +112,7 @@ const [intervalId, setIntervalId] = useState(null);
 
   console.log('Simulation - Envoi des données de paiement:', paymentData);
 
-  fetch('http://localhost:8003/api/paiements', {
+  fetch('https://utonom-production-8fd4.up.railway.app/api/paiements', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(paymentData)
@@ -394,7 +394,7 @@ function refreshCarToUserRoute(position = carPosition) {
 
     console.log('Envoi des données de paiement:', paymentData);
 
-    fetch('http://localhost:8003/api/paiements', {
+    fetch('https://utonom-production-8fd4.up.railway.app/api/paiements', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(paymentData)
