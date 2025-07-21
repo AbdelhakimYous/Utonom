@@ -9,9 +9,6 @@ use Throwable;
 
 class CreerUtilisateur extends Controller
 {
- 
-
-
     function createUser(Request $request)
     {
         try {

@@ -12,7 +12,7 @@ function Form() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const url = 'http://127.0.0.1:8000/api/nouveauutilisateur';
+const url = 'https://utonomutlisateur-bnd8e0bqdyd0hdha.canadacentral-01.azurewebsites.net/api/nouveauutilisateur';
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
