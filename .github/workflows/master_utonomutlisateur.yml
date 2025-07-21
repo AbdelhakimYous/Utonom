@@ -1,6 +1,4 @@
-name: Build and deploy Laravel backend1 to Azure Web App - utonomutlisateur
-
-
+name: Build and deploy Laravel backend1 to Azure Web App - utonomutilisateur
 
 on:
   push:
@@ -28,8 +26,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction --optimize-autoloader
 
       - name: Zip artifact for deployment
-        working-directory: ./backend
-        run: zip -r ../release.zip .
+        run: zip -r release.zip backend
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -62,8 +59,8 @@ jobs:
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
         with:
-          app-name: 'utonomutlisateur'
+          app-name: 'utonomutilisateur'
           slot-name: 'Production'
-          package: .
+          package: ./backend
+
