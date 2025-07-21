@@ -27,7 +27,7 @@ function Form() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const url = 'http://127.0.0.1:8005/api/nouveauutilisateur';
+    const url = 'https://utonom-production-b201.up.railway.app/api/nouveauutilisateur';
 
     const response = await fetch(url, {
       method: 'POST',

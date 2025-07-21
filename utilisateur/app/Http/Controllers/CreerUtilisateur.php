@@ -28,7 +28,7 @@ class CreerUtilisateur extends Controller
                 'motdepasse' => bcrypt($request->input('motdepasse')),
                 'nomUtilisateur' => $request->input('nomUtilisateur'),
                 'age' => $request->input('age'),
-                'role' => 'client'
+                'role' => 'admin'
             ]);
 
             return response()->json(['message' => 'Utilisateur enregistré avec succès'], 201);

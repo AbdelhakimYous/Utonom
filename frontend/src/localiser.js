@@ -501,7 +501,7 @@ useEffect(() => {
       alert("Localisation non disponible !");
       return;
     }
-    fetch('http://localhost:8000/api/voiture-plus-proche', {
+    fetch('https://utonom-production.up.railway.app/api/voiture-plus-proche', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
