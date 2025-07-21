@@ -39,7 +39,7 @@ function AjouterVoiture() {
     if (image) formData.append('image', image);
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/creervoiture', {
+        const response = await fetch('https://utonom-production.up.railway.app/api/creervoiture', {
           method: 'POST',
           body: formData,
           headers: {
