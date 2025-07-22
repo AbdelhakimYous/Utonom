@@ -34,6 +34,7 @@ function Login() {
             localStorage.setItem("role", data.roles);
             localStorage.setItem("user_id", data.id);
             console.log(data.id);
+            window.location.href = '/';
 
         } catch (error) {
             console.error("Erreur réseau ou autre :", error);
