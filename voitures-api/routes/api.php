@@ -25,3 +25,11 @@ Route::get('/testDb', function () {
         ], 500);
     }
 });
+
+
+Route::get('/voitures-disponibles', [ChercherVoitureController::class, 'voituresDisponibles']);
+Route::post('/accepter-voiture/{id}', [ChercherVoitureController::class, 'accepterVoiture']);
+Route::get('/voitures-acceptees', [ChercherVoitureController::class, 'voituresAcceptees']);
+Route::post('/accepter-voiture', [ChercherVoitureController::class, 'accepterVoiture']);
+
+Route::get('/verifier-disponibilite/{id}', [ChercherVoitureController::class, 'verifierDisponibilite']);

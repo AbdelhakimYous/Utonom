@@ -9,6 +9,7 @@ import Lesutilisateurs from './touslesutilisateurs.js';
 import AfficherVns from './afficherlesvns.js';
 import React from "react";
 import ChatBot from './ChatBot.js';
+import ReponseAdmin from './ReponseAdmin.js';
 
 
 function Home() {
@@ -76,6 +77,7 @@ function App() {
             <>
               <Link to="/localiser">Chercher une voiture</Link>
               <Link to="/lesvoitures">Liste des Voitures</Link>
+              <Link to="/Reponse">Reponse</Link>
               <Link to="/lesutilisateurs">les</Link>
               <Link to="/lesvns">vns</Link>
               {role === "admin" && <Link to="/ajoutervoiture">Ajouter Voiture</Link>}
@@ -101,6 +103,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/ajoutervoiture" element={<AjouterVoiture />} />
           <Route path="/lesvoitures" element={<LesVoitures />} /> 
+          <Route path="/Reponse" element={<ReponseAdmin />} /> 
           <Route path="/localiser" element={<Localiser/>} /> 
           <Route path="/lesutilisateurs" element={<Lesutilisateurs/>} /> 
           <Route path="/lesvns" element={<AfficherVns/>} /> 
