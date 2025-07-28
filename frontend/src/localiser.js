@@ -31,56 +31,49 @@ const Localiser = () => {
   // Nouveaux états pour le flux
   const [adresseConfirmee, setAdresseConfirmee] = useState(false);
   const [paiementEffectue, setPaiementEffectue] = useState(false);
-useEffect(() => {
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      try {
-        const { latitude, longitude } = position.coords;
 
-        // Demande la voiture la plus proche
-        const res = await fetch('https://utonom-production.up.railway.app/api/voiture-plus-proche', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ latitude, longitude }),
-        });
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      alert("La géolocalisation n'est pas supportée.");
+      return;
+    }
 
-        const data = await res.json();
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const coords = {
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude
+        };
+        setUserPosition({ lat: coords.latitude, lng: coords.longitude });
 
-        if (data.id && data.latitude && data.longitude) {
-          const lat = parseFloat(data.latitude);
-          const lng = parseFloat(data.longitude);
-          setVoiture({ id: data.id, position: { lat, lng } });
+        try {
+          const res = await fetch('https://utonom-production.up.railway.app/api/voiture-plus-proche', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              latitude: coords.latitude,
+              longitude: coords.longitude
+            })
+          });
+          const data = await res.json();
+          console.log(data);
 
-          // Après 15 secondes, vérifie la disponibilité (acceptation par admin)
-          setTimeout(async () => {
-            try {
-              const resCheck = await fetch(`https://utonom-production.up.railway.app/api/verifier-disponibilite/${data.id}`);
-              const dispoData = await resCheck.json();
+          if (data.latitude && data.longitude) {
+            const lat = parseFloat(data.latitude);
+            const lng = parseFloat(data.longitude);
+            setVoiture({ position: { lat, lng } });
+          } else {
+            alert("Aucune voiture trouvée.");
 
-              if (dispoData.disponible === false) {
-                alert("La course a été acceptée par l'admin.");
-              } else {
-                alert("L'admin a refusé la course.");
-                // Ici, tu peux déclencher une nouvelle recherche ou autre
-              }
-            } catch (error) {
-              console.error("Erreur lors de la vérification de disponibilité :", error);
-            }
-          }, 15000);
-
-        } else {
-          alert("Aucune voiture trouvée.");
+          }
+        } catch (error) {
+          alert("Erreur lors de l'appel API.");
+          console.error(error);
         }
-
-      } catch (error) {
-        alert("Erreur lors de l'appel API.");
-        console.error(error);
-      }
-    },
-    () => alert("Impossible d'obtenir votre position.")
-  );
-}, []);
-
+      },
+      () => alert("Impossible d'obtenir votre position.")
+    );
+  }, []);
 
   useEffect(() => {
     if (routePath.length > 0 && stepIndex < routePath.length) {

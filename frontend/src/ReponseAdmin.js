@@ -4,7 +4,6 @@ function ReponseAdmin() {
   const [voitures, setVoitures] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Charger les voitures disponibles
   const fetchVoituresDisponibles = async () => {
     try {
       const res = await fetch('https://utonom-production.up.railway.app/api/voitures-disponibles');
@@ -21,24 +20,33 @@ function ReponseAdmin() {
     fetchVoituresDisponibles();
   }, []);
 
-  // Accepter une voiture (mettre dispo à false)
   const accepterVoiture = async (id) => {
     try {
       const res = await fetch('https://utonom-production.up.railway.app/api/accepter-voiture', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       });
-
       const data = await res.json();
       alert(data.message);
-
-      // Recharger la liste
       fetchVoituresDisponibles();
     } catch (error) {
       console.error('Erreur lors de l\'acceptation', error);
+    }
+  };
+
+  const refuserVoiture = async (id) => {
+    try {
+      const res = await fetch('https://utonom-production.up.railway.app/api/refuser-voiture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchVoituresDisponibles();
+    } catch (error) {
+      console.error('Erreur lors du refus', error);
     }
   };
 
@@ -54,6 +62,9 @@ function ReponseAdmin() {
             {voiture.marque} {voiture.modele} (ID: {voiture.id}) — Disponibilité: {voiture.disponible ? 'Oui' : 'Non'}
             <button onClick={() => accepterVoiture(voiture.id)} style={{ marginLeft: '10px' }}>
               Accepter
+            </button>
+            <button onClick={() => refuserVoiture(voiture.id)} style={{ marginLeft: '10px', backgroundColor: 'red', color: 'white' }}>
+              Refuser
             </button>
           </li>
         ))}

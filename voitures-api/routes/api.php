@@ -31,5 +31,6 @@ Route::get('/voitures-disponibles', [ChercherVoitureController::class, 'voitures
 Route::post('/accepter-voiture/{id}', [ChercherVoitureController::class, 'accepterVoiture']);
 Route::get('/voitures-acceptees', [ChercherVoitureController::class, 'voituresAcceptees']);
 Route::post('/accepter-voiture', [ChercherVoitureController::class, 'accepterVoiture']);
+Route::post('/refuser-voiture', [ChercherVoitureController::class, 'refuserVoiture']);
 
 Route::get('/verifier-disponibilite/{id}', [ChercherVoitureController::class, 'verifierDisponibilite']);

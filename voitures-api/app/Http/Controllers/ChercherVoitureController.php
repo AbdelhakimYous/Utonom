@@ -63,6 +63,18 @@ class ChercherVoitureController extends Controller
 
         return response()->json(['message' => 'Voiture acceptée avec succès.'], 200);
     }
+public function refuserVoiture(Request $request)
+{
+    $request->validate([
+        'id' => 'required|integer|exists:voitures,id'
+    ]);
+
+    DB::table('voitures')
+        ->where('id', $request->input('id'))
+        ->update(['disponible' => true]);
+
+    return response()->json(['message' => 'Voiture refusée avec succès.'], 200);
+}
 
     public function verifierDisponibilite($id)
 {
