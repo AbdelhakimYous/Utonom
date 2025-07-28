@@ -50,6 +50,44 @@ function ReponseAdmin() {
     }
   };
 
+  const supprimerVoiture = async (id) => {
+    try {
+      const res = await fetch('https://utonom-production.up.railway.app/api/supprimer-voiture', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchVoituresDisponibles();
+    } catch (error) {
+      console.error('Erreur lors de la suppression', error);
+    }
+  };
+
+  const modifierVoiture = async (voiture) => {
+    const nouvelleMarque = prompt('Nouvelle marque :', voiture.marque);
+    const nouveauModele = prompt('Nouveau modèle :', voiture.modele);
+    if (!nouvelleMarque || !nouveauModele) return;
+
+    try {
+      const res = await fetch('https://utonom-production.up.railway.app/api/modifier-voiture', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: voiture.id,
+          marque: nouvelleMarque,
+          modele: nouveauModele
+        }),
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchVoituresDisponibles();
+    } catch (error) {
+      console.error('Erreur lors de la modification', error);
+    }
+  };
+
   if (loading) return <p>Chargement...</p>;
 
   return (
@@ -63,8 +101,14 @@ function ReponseAdmin() {
             <button onClick={() => accepterVoiture(voiture.id)} style={{ marginLeft: '10px' }}>
               Accepter
             </button>
-            <button onClick={() => refuserVoiture(voiture.id)} style={{ marginLeft: '10px', backgroundColor: 'red', color: 'white' }}>
+            <button onClick={() => refuserVoiture(voiture.id)} style={{ marginLeft: '10px', backgroundColor: 'orange' }}>
               Refuser
+            </button>
+            <button onClick={() => modifierVoiture(voiture)} style={{ marginLeft: '10px', backgroundColor: 'blue', color: 'white' }}>
+              Modifier
+            </button>
+            <button onClick={() => supprimerVoiture(voiture.id)} style={{ marginLeft: '10px', backgroundColor: 'red', color: 'white' }}>
+              Supprimer
             </button>
           </li>
         ))}

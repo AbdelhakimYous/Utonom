@@ -83,6 +83,43 @@ public function refuserVoiture(Request $request)
     return response()->json(['disponible' => $estDisponible], 200);
 }
 
+    public function modifierVoiture(Request $request, $id)
+    {
+        $request->validate([
+            'marque' => 'nullable|string|max:255',
+            'modele' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'disponible' => 'nullable|boolean',
+        ]);
+
+        $voiture = DB::table('voitures')->where('id', $id)->first();
+        if (!$voiture) {
+            return response()->json(['error' => 'Voiture introuvable'], 404);
+        }
+
+        DB::table('voitures')->where('id', $id)->update($request->only([
+            'marque', 'modele', 'latitude', 'longitude', 'disponible'
+        ]));
+
+        return response()->json(['message' => 'Voiture modifiée avec succès'], 200);
+    }
+
+    // ✅ Nouvelle méthode : Supprimer une voiture
+    public function supprimerVoiture($id)
+    {
+        $voiture = DB::table('voitures')->where('id', $id)->first();
+        if (!$voiture) {
+            return response()->json(['error' => 'Voiture introuvable'], 404);
+        }
+
+        DB::table('voitures')->where('id', $id)->delete();
+
+        return response()->json(['message' => 'Voiture supprimée avec succès'], 200);
+    }
+
+    
+
 }
 
 
