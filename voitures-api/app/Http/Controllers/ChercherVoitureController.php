@@ -9,44 +9,37 @@ use Illuminate\Support\Facades\Hash;
 
 class ChercherVoitureController extends Controller
 {
-    public function voitureLaPlusProche(Request $request)
-    {
-        $request->validate([
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
+public function voitureLaPlusProche(Request $request)
+{
+    $request->validate([
+        'latitude' => 'required|numeric',
+        'longitude' => 'required|numeric',
+    ]);
 
-        $lat = $request->input('latitude');
-        $lng = $request->input('longitude');
+    $lat = $request->input('latitude');
+    $lng = $request->input('longitude');
 
-        // Formule Haversine pour calculer la distance
-        $voiture = DB::table('voitures')
-            ->select('*')
-            ->selectRaw(
-                '(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
-                [$lat, $lng, $lat]
-            )
-            ->where('disponible', false)
-            ->orderBy('distance')
-            ->first();
+    // Formule Haversine pour calculer la distance
+    $voiture = DB::table('voitures')
+        ->select('*')
+        ->selectRaw(
+            '(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance',
+            [$lat, $lng, $lat]
+        )
+        ->where('disponible', true)
+        ->orderBy('distance')
+        ->first();
 
-        if ($voiture) {
-            // Mettre à jour la disponibilité à true
-            DB::table('voitures')
-                ->where('id', $voiture->id)
-                ->update(['disponible' => true]);
-
-            return response()->json($voiture, 200);
-        } else {
-            return response()->json(['error' => 'Aucune voiture trouvée'], 404);
-        }
+    if ($voiture) {
+        return response()->json($voiture, 200);
+    } else {
+        return response()->json(['error' => 'Aucune voiture trouvée'], 404);
     }
+}
 
     public function voituresDisponibles()
     {
-        $voitures = DB::table('voitures')
-            ->where('disponible', true)
-            ->get();
+        $voitures = DB::table('voitures')->get();
 
         return response()->json($voitures, 200);
     }
